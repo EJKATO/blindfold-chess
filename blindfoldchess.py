@@ -1,10 +1,13 @@
 import chess
+import chess.svg
 import numpy as np
 import random
 import speech_recognition as sr
 import os
 from gtts import gTTS
 from playsound import playsound
+import warnings
+warnings.filterwarnings('ignore')
 
 phoneticSpelling = {
     'a' : 'ei',
@@ -160,7 +163,7 @@ def getPlayerMove(board : chess.Board, dictateFlag : bool, moveNo : int):
             print(board.legal_moves)
             return getPlayerMove(board, dictateFlag, moveNo)
         elif userInput == 'cheat':
-            print(board)
+            chess.svg.board(board)
             return getPlayerMove(board, dictateFlag, moveNo)
         else:
             try:
@@ -254,13 +257,14 @@ def playBlindFoldChessWithRandom():
                 textToSpeech('you played ' + moveToSpeechText(board, playerMove))
             print('you played ' + moveToText(board, playerMove))
             board.push(playerMove)
-            computerMove = getComputerMoveRandom(board)
-            if dictateFlag:
-                textToSpeech('the computer played ' + moveToSpeechText(board, computerMove))
-            print('the computer played ' + moveToText(board, computerMove))
-            board.push(computerMove)
-            print('\n')
-            moveNo += 1
+            if not board.is_game_over():
+                computerMove = getComputerMoveRandom(board)
+                if dictateFlag:
+                    textToSpeech('the computer played ' + moveToSpeechText(board, computerMove))
+                print('the computer played ' + moveToText(board, computerMove))
+                board.push(computerMove)
+                print('\n')
+                moveNo += 1
         print(board.outcome())
     else: 
         print("You are playing as black")
@@ -271,15 +275,16 @@ def playBlindFoldChessWithRandom():
                 textToSpeech('the computer played ' + moveToSpeechText(board, computerMove))
             print('the computer played ' + moveToText(board, computerMove))
             board.push(computerMove)
-            playerMove = getPlayerMove(board, dictateFlag, moveNo)
-            if playerMove == False:
-                break
-            if dictateFlag:
-                textToSpeech('you played ' + moveToSpeechText(board, playerMove))
-            print('you played ' + moveToText(board, playerMove))
-            print('\n')
-            board.push(playerMove)
-            moveNo += 1
+            if not board.is_game_over():
+                playerMove = getPlayerMove(board, dictateFlag, moveNo)
+                if playerMove == False:
+                    break
+                if dictateFlag:
+                    textToSpeech('you played ' + moveToSpeechText(board, playerMove))
+                print('you played ' + moveToText(board, playerMove))
+                print('\n')
+                board.push(playerMove)
+                moveNo += 1
         print(board.outcome())
 
 

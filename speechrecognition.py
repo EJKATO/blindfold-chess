@@ -1,5 +1,5 @@
 import tkinter as tk
-import speechrecognition as sr
+import speech_recognition as sr
 
 class AudioToTextGUI:
     def __init__(self, root):
